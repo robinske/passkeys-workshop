@@ -6,7 +6,9 @@ Follow the [IT checklist](it-checklist.md) to make sure you have everything you'
 
 ## Step 1: Deploy the starter application from the Twilio CodeExchange 
 
-Head over to the [Twilio Code Exchange and deploy this sample project as a starting point](https://www.twilio.com/code-exchange/verify-passkeys). This project will provide a few things:
+Head over to the [Twilio Code Exchange and deploy this sample project as a starting point](https://www.twilio.com/code-exchange/verify-passkeys). Use the default `API URL` and leave Android app keys blank - you won't need them for this workshop.
+
+This Code Exchange project will provide a few things:
 
 * A live URL you can use as your [relying party](https://webauthn.wtf/how-it-works/relying-party) for testing passkeys
 * Hosted functions to register and authenticate with passkeys
@@ -17,9 +19,9 @@ After you deploy your project, click the option to Edit your customizations dire
 
 ## Step 2: Use the Twilio Passkey JavaScript SDK to create and manage passkeys in the browser
 
-Next you will create a frontend for your application to interact with the [built-in web authentication browser APIs](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API). To do this, you will integrate The Twilio Passkey JavaScript SDK which will allow you to easily create and fetch passkeys, as well as interact with the backend API you just created for authentication.
+Next, create a frontend for your application to interact with the [built-in web authentication browser APIs](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API). To do this, you will integrate the Twilio Passkey JavaScript SDK to easily create and fetch passkeys, as well as interact with the backend API you just created for authentication.
 
-Create a new asset called **index.html** and paste the following starter code:
+Replace the code in **index.html** with the following starter code:
 
 ```javascript
 <!DOCTYPE html>
@@ -149,7 +151,7 @@ Create a new asset called **index.html** and paste the following starter code:
       );
 
       try {
-        //here will be the Sign Up logic
+        // TODO - Sign Up logic
       } catch (error) {
         console.log(error);
       }
@@ -157,7 +159,7 @@ Create a new asset called **index.html** and paste the following starter code:
 
     const signIn = async () => {
       try {
-        // here will be the Sign In logic
+        // TODO - Sign In logic
       } catch (error) {
         console.log(err);
       }
@@ -172,7 +174,7 @@ Create a new asset called **index.html** and paste the following starter code:
 </html>
 ```
 
-This provides placeholders for sign up and sign in functions that we will fill in next.
+This provides placeholders for sign up and sign in functions that we will create next.
 
 Now it is time to add the SDK. For this tutorial you will load it from the [CDN](https://github.com/twilio/twilio-verify-passkeys-web/tree/0.0.2?tab=readme-ov-file#using-it-from-cdn) in the **index.html** file. Add the following script tag inside the **`<head>`** element after the **`<title>`**: 
 
