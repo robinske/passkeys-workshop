@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Passkeys Demo</title>
+
+    <script src="https://unpkg.com/@twilio/twilio-verify-passkeys-web@0.0.2/dist/twilio-verify-passkeys.iife.js"></script>
+
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://robinske.github.io/passkeys-workshop/styles.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1 class="title">Sign up or sign in</h1>
+      <div class="input_container">
+        <div class="input_component">
+          <input
+            type="tel"
+            name="username_input"
+            id="usr_input"
+            oninput="toggleContinueButton()"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn continue_btn"
+          id="continue"
+          onclick="login()"
+          disabled
+        >
+          Continue
+        </button>
+        <span class="separator">&#8213; or &#8213;</span>
+        <button type="button" class="btn passkey_btn" onclick="signIn()">
+          Sign in with passkey
+        </button>
+      </div>
+    </div>
+    <div id="modal" class="invisible">
+      <h1 class="title">
+        Sign-in with your face,<br />
+        fingerprint or PIN
+      </h1>
+      <p>
+        Harness your device capabilities for a fast<br />
+        passkey login with maximun security.
+      </p>
+      <a>Learn more &rarr;</a>
+      <div class="input_container modal_input">
+        <button class="btn continue_btn enable" onclick="signUp()">
+          Continue
+        </button>
+        <a class="skip_btn">Skip</a>
+      </div>
+    </div>
+    <div id="app" class="invisible">
+      <h1 class="title" id="welcome"></h1>
+      <div class="input_container">
+        <button class="btn continue_btn enable" onclick="logOut()">
+          Log out
+        </button>
+      </div>
+    </div>
+  </body>
+  <script>
+    let sessionUsername = sessionStorage.getItem("session");
+
+    const loadApp = (username) => {
+      document.getElementById("welcome").innerHTML = `Welcome ${username}`;
+      document.getElementById("modal").classList.add("invisible");
+      document.getElementById("container").classList.add("invisible");
+      document.getElementById("app").classList.remove("invisible");
+    };
+
+    if (sessionUsername) {
+      loadApp(sessionUsername);
+    }
+
+    const usernameElement = document.getElementById("usr_input");
+    const errorElement = document.getElementById("error");
+    const continueButton = document.getElementById("continue");
+    const iti = window.intlTelInput(usernameElement, {
+      initialCountry: "us",
+      showSelectedDialCode: true,
+      loadUtils: () =>
+        import(
+          "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+        ),
+    });
+
+    const toggleContinueButton = () => {
+      const username = usernameElement.value;
+      if (username) {
+        continueButton.classList.add("enable");
+        continueButton.disabled = false;
+      } else {
+        continueButton.classList.remove("enable");
+        continueButton.disabled = true;
+      }
+    };
+
+    const login = () => {
+      const authenticationCard = document.getElementById("container");
+      const passkeyCard = document.getElementById("modal");
+      authenticationCard.classList.add("invisible");
+      passkeyCard.classList.remove("invisible");
+    };
+
+    const twilioPasskeys = new TwilioPasskeys();
+
+    const signUp = async () => {
+      const username = iti.getNumber(
+        window.intlTelInput.utils.numberFormat.E164
+      );
+
+      try {
+        const response = await fetch(`./registration/start`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username }),
+        });
+        const responseJSON = await response.json();
+        let credential = await twilioPasskeys.create(
+          JSON.stringify(responseJSON)
+        );
+        if (credential.Error != null) throw new Error(credential.Error);
+        const verificationResponse = await fetch(
+          `./registration/verification`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: credential.Success.id,
+              rawId: credential.Success.rawId,
+              authenticatorAttachment:
+                credential.Success.authenticatorAttachment,
+              type: credential.Success.type,
+              response: {
+                attestationObject: credential.Success.attestationObject,
+                clientDataJSON: credential.Success.clientDataJSON,
+                transports: credential.Success.transports,
+              },
+            }),
+          }
+        );
+        const { status } = await verificationResponse.json();
+        if (status === "verified") {
+          sessionStorage.setItem("session", username);
+          loadApp(username);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const signIn = async () => {
+      try {
+        const response = await fetch(`./authentication/start`);
+        const responseJSON = await response.json();
+        let { Success, Error } = await twilioPasskeys.authenticate(
+          JSON.stringify(responseJSON)
+        );
+        const authentication = await fetch(`./authentication/verification`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: Success.id,
+            rawId: Success.rawId,
+            authenticatorAttachment: Success.authenticatorAttachment,
+            type: Success.type,
+            response: {
+              authenticatorData: Success.authenticatorData,
+              clientDataJSON: Success.clientDataJSON,
+              signature: Success.signature,
+              userHandle: Success.userHandle,
+            },
+          }),
+        });
+        const { status, identity } = await authentication.json();
+        if (status === "approved") {
+          console.log("Passkey validated on the server, logging in...");
+          sessionStorage.setItem("session", identity);
+          loadApp(identity);
+        } else {
+          console.log(status);
+        }
+      } catch (error) {
+        console.error(err);
+      }
+    };
+
+    const logOut = () => {
+      sessionStorage.removeItem("session");
+      document.getElementById("app").classList.add("invisible");
+      document.getElementById("container").classList.remove("invisible");
+    };
+  </script>
+</html>
