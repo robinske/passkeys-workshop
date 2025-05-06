@@ -39,9 +39,9 @@ curl --location 'https://comms.twilio.com/preview/Factors' \
 Prerequisites for using Verify Passkeys Web SDK
 
 - [ ] Tech Stack: The Web SDK is built with Vanilla Javascript and uses JSDoc for annotations, so only Javascript is supported for building sample app.  
-- [ ] You can create a [Twilio Function](https://www.twilio.com/docs/runtime/quickstart/serverless-functions-send-sms)  
-      * This will be used to create the sample app and the sample backend during our session   
-- [ ] If you would like to connect to your own backend, please have ngrok configured on your machine if it is running in your local machine   
-      * ngrok instructions [here](https://ngrok.com/docs/guides/getting-started/)  
+- [ ] You can create a [Twilio Function](https://www.twilio.com/docs/runtime/quickstart/serverless-functions-send-sms)
+  - This will be used to create the sample app and the sample backend during our session
+- [ ] If you would like to connect to your own backend, please have ngrok configured on your machine if it is running in your local machine
+  - ngrok instructions [here](https://ngrok.com/docs/guides/getting-started/)  
 - [ ] Will you be running your code from your local machine? If so:   
-      * Download the Twilio CLI and set it up on your machine → [Installation instructions](https://www.twilio.com/docs/twilio-cli/quickstart)  
+  - Download the Twilio CLI and set it up on your machine → [Installation instructions](https://www.twilio.com/docs/twilio-cli/quickstart)  
