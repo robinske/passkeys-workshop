@@ -3,7 +3,7 @@
 - [ ] Can you log in to your [Twilio account/console?](https://twilio.com/console)
 - [ ] Are you working in a separate project or subaccount to prevent overriding production settings? Instructions to: [View and Create new Twilio Subaccounts](https://support.twilio.com/hc/en-us/articles/360011348693-View-and-Create-New-Twilio-Subaccounts)  
 - [ ] Do you have your [API Credentials](https://www.twilio.com/docs/iam/credentials/api)? We will be using our Account SIDs and Auth Tokens
-- [ ] Send the Account SID you plan to use for the day of the build event to [tgu@twilio.com](mailto:tgu@twilio.com). Account SIDs are formatted like: `ACxxxxxxxxxxx...`
+- [ ] Send the Account SID you plan to use for the day of the build event to [tgu@twilio.com](mailto:tgu@twilio.com). Account SIDs are formatted like: `ACxxxxxxxxxxx...` and can be found [in the Twilio Console](https://console.twilio.com/us1/account/manage-account/general-settings)
 
 **Once you provided your Account SID:** 
 
@@ -45,5 +45,3 @@ Prerequisites for using Verify Passkeys Web SDK
       * ngrok instructions [here](https://ngrok.com/docs/guides/getting-started/)  
 - [ ] Will you be running your code from your local machine? If so:   
       * Download the Twilio CLI and set it up on your machine → [Installation instructions](https://www.twilio.com/docs/twilio-cli/quickstart)  
-        * Do you plan on using a [Twilio Helper library](https://www.twilio.com/docs/libraries)? Is it possible to install the [Twilio Helper Library](https://www.twilio.com/docs/libraries) locally?  
-- [ ] Ensure access to the Verify Passkeys Web [repository](https://github.com/twilio/twilio-verify-passkeys-web)
