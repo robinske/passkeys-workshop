@@ -185,19 +185,19 @@ Replace the code in "**index.html"** with the following starter code:
 
 This provides placeholders for sign up and sign in functions that we will create next.
 
-Next, load the Passkeys Javascript SDK from the [CDN](https://github.com/twilio/twilio-verify-passkeys-web/tree/0.0.2?tab=readme-ov-file#using-it-from-cdn) in the index.html file. Add the following script tag inside the \`\<head\>\` element after the \`\<title\>\`:
+Next, load the Passkeys Javascript SDK from the [CDN](https://github.com/twilio/twilio-verify-passkeys-web/tree/0.0.2?tab=readme-ov-file#using-it-from-cdn) in the index.html file. Add the following script tag inside the `<head>` element after the `<title>`:
 
 ```javascript
 <script src="https://unpkg.com/@twilio/twilio-verify-passkeys-web@0.0.2/dist/twilio-verify-passkeys.iife.js"></script>
 ```
 
-After that you can instantiate the SDK. Add the following line inside the script block before the \`const signUp\` function.
+After that you can instantiate the SDK. Add the following line inside the script block before the `const signUp` function.
 
 ```javascript
 const twilioPasskeys = new TwilioPasskeys();
 ```
 
-To create a passkey at sign up, add the following code inside the \`try\` block of the signUp function, replacing the \```// TODO - Sign Up logic`:`` 
+To create a passkey at sign up, add the following code inside the `try` block of the signUp function, replacing the `// TODO - Sign Up logic:` 
 
 ```javascript
         const response = await fetch(`./registration/start`, {
@@ -249,7 +249,7 @@ Enter your phone number and follow the prompts to register a passkey. Here I'm r
 
 Next, add support for logging in. This flow will fetch the passkey from the user's password manager (using the JavaScript SDK) and validate its signature with the server (using the Twilio Verify API).
 
-Replace the \`TODO \- sign in logic\` with the following code:
+Replace the `TODO - sign in logic` with the following code:
 
 ```javascript
         const response = await fetch(`./authentication/start`);
